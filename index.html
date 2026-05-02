@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>harshitsiwach — cypher terminal</title>
+    <script src="tuicss.min.js"></script>
+    <link rel="stylesheet" href="tuicss.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #00FF41;        /* Rupture Labs brand */
+            --neon-pink: #FF10F0;         /* Hermes accent */
+            --neon-blue: #00D4FF;         /* Cyber blue */
+            --neon-purple: #a855f7;       /* Hermes purple */
+            --neon-orange: #f97316;       /* Degen energy */
+            --bg-dark: #050505;
+            --tui-bg: #0a0a0a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: #e0e0e0;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Braille background pattern */
+        .braille-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, var(--neon-green) 1px, transparent 1px),
+                radial-gradient(circle, var(--neon-pink) 1px, transparent 1px);
+            background-size: 40px 20px, 60px 30px;
+            background-position: 0 0, 20px 10px;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: -1;
+            animation: braille-shift 20s linear infinite;
+        }
+
+        @keyframes braille-shift {
+            0% { background-position: 0 0, 20px 10px; }
+            100% { background-position: 400px 20px, 440px 30px; }
+        }
+
+        /* CRT scanline effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,0,0,0.1),
+                rgba(0,0,0,0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Glitch text effect */
+        .glitch {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--neon-pink);
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim 3s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: 2px 0 var(--neon-blue);
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim2 2s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(42px, 9999px, 44px, 0); }
+            5% { clip: rect(12px, 9999px, 59px, 0); }
+            10% { clip: rect(48px, 9999px, 29px, 0); }
+            15% { clip: rect(42px, 9999px, 73px, 0); }
+            20% { clip: rect(63px, 9999px, 27px, 0); }
+            25% { clip: rect(34px, 9999px, 55px, 0); }
+            30% { clip: rect(86px, 9999px, 73px, 0); }
+            35% { clip: rect(20px, 9999px, 20px, 0); }
+            40% { clip: rect(26px, 9999px, 60px, 0); }
+            45% { clip: rect(25px, 9999px, 66px, 0); }
+            50% { clip: rect(57px, 9999px, 98px, 0); }
+            55% { clip: rect(5px, 9999px, 46px, 0); }
+            60% { clip: rect(82px, 9999px, 31px, 0); }
+            65% { clip: rect(54px, 9999px, 27px, 0); }
+            70% { clip: rect(28px, 9999px, 99px, 0); }
+            75% { clip: rect(45px, 9999px, 69px, 0); }
+            80% { clip: rect(23px, 9999px, 85px, 0); }
+            85% { clip: rect(54px, 9999px, 84px, 0); }
+            90% { clip: rect(45px, 9999px, 47px, 0); }
+            95% { clip: rect(37px, 9999px, 20px, 0); }
+            100% { clip: rect(4px, 9999px, 91px, 0); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            5% { clip: rect(52px, 9999px, 74px, 0); }
+            10% { clip: rect(79px, 9999px, 85px, 0); }
+            15% { clip: rect(75px, 9999px, 5px, 0); }
+            20% { clip: rect(67px, 9999px, 61px, 0); }
+            25% { clip: rect(14px, 9999px, 79px, 0); }
+            30% { clip: rect(1px, 9999px, 66px, 0); }
+            35% { clip: rect(86px, 9999px, 30px, 0); }
+            40% { clip: rect(23px, 9999px, 98px, 0); }
+            45% { clip: rect(85px, 9999px, 72px, 0); }
+            50% { clip: rect(71px, 9999px, 75px, 0); }
+            55% { clip: rect(2px, 9999px, 48px, 0); }
+            60% { clip: rect(30px, 9999px, 16px, 0); }
+            65% { clip: rect(59px, 9999px, 50px, 0); }
+            70% { clip: rect(41px, 9999px, 62px, 0); }
+            75% { clip: rect(2px, 9999px, 82px, 0); }
+            80% { clip: rect(47px, 9999px, 73px, 0); }
+            85% { clip: rect(3px, 9999px, 27px, 0); }
+            90% { clip: rect(40px, 9999px, 86px, 0); }
+            95% { clip: rect(45px, 9999px, 99px, 0); }
+            100% { clip: rect(18px, 9999px, 50px, 0); }
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cyber-header {
+            border: 3px solid var(--neon-green);
+            background: linear-gradient(135deg, rgba(0,255,65,0.1) 0%, rgba(0,212,255,0.1) 100%);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .ascii-art {
+            font-size: 10px;
+            line-height: 1;
+            white-space: pre;
+            color: var(--neon-green);
+            text-align: center;
+            text-shadow: 0 0 10px var(--neon-green);
+            margin: 20px 0;
+        }
+
+        .braille-preview {
+            font-size: 16px;
+            line-height: 1;
+            color: var(--neon-green);
+            opacity: 0.15;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            pointer-events: none;
+        }
+
+        .ticker-wrap {
+            background: var(--tui-bg);
+            border: 2px solid var(--neon-purple);
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: ticker 30s linear infinite;
+            color: var(--neon-orange);
+            font-weight: bold;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .section-title {
+            color: var(--neon-green);
+            border-bottom: 2px solid var(--neon-green);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .about-box {
+            border-left: 4px solid var(--neon-pink);
+            padding-left: 20px;
+            margin: 20px 0;
+        }
+
+        .project-card {
+            margin: 20px 0;
+            border: 1px solid #333;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .project-card:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 30px rgba(0,255,65,0.3);
+            transform: translateX(5px);
+        }
+
+        .degen-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            margin: 3px;
+            border: 1px solid var(--neon-purple);
+            color: var(--neon-purple);
+            font-size: 11px;
+            background: rgba(168,85,247,0.1);
+            cursor: crosshair;
+            transition: all 0.2s;
+        }
+
+        .degen-badge:hover {
+            background: var(--neon-purple);
+            color: #fff;
+            box-shadow: 0 0 10px var(--neon-purple);
+            transform: scale(1.05);
+        }
+
+        .stack-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            margin: 2px;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-size: 10px;
+            font-family: monospace;
+        }
+
+        .cypher-text {
+            color: var(--neon-pink);
+            font-family: monospace;
+            position: relative;
+        }
+
+        .cypher-text::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: var(--neon-pink);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .terminal-input {
+            background: #000;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .terminal-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .decode-effect {
+            font-family: monospace;
+            color: var(--neon-green);
+        }
+
+        .meme-text {
+            font-style: italic;
+            opacity: 0.8;
+            font-size: 0.9em;
+            color: var(--neon-blue);
+        }
+
+        .footer-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #000;
+            border-top: 2px solid var(--neon-green);
+            padding: 8px 20px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .status-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin: 0 3px;
+            animation: blink 1s infinite;
+        }
+
+        .status-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .status-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .braille-rain {
+            position: fixed;
+            top: -100px;
+            font-size: 14px;
+            color: var(--neon-green);
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(calc(100vh + 100px)); }
+        }
+
+        .ascii-loading {
+            font-size: 8px;
+            line-height: 1;
+            white-space: pre;
+            color: var(--neon-green);
+            animation: flicker 0.1s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--neon-green); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-purple); }
+
+        .locked-block {
+            border: 1px solid var(--neon-orange);
+            background: rgba(249,115,22,0.05);
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .locked-block::before {
+            content: '⚠️ ';
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CRT EFFECT -->
+    <div class="scanlines"></div>
+    <div class="braille-bg"></div>
+
+    <!-- BRAILLE RAIN -->
+    <div class="braille-rain" style="left: 10%; animation-duration: 8s;">⠁⠃⠄⠅⠆⠇⠈⠉⠊⠋</div>
+    <div class="braille-rain" style="left: 30%; animation-duration: 12s;">⠘⠙⠚⠛⠜⠝⠞⠟</div>
+    <div class="braille-rain" style="left: 50%; animation-duration: 10s;">⠠⠡⠢⠣⠤⠥⠦⠧</div>
+    <div class="braille-rain" style="left: 70%; animation-duration: 15s;">⠨⠩⠪⠫⠬⠭⠮⠯</div>
+    <div class="braille-rain" style="left: 90%; animation-duration: 11s;">⠰⠱⠲⠳⠴⠵⠶⠷</div>
+
+    <div class="main-container">
+
+        <!-- HEADER -->
+        <div class="cyber-header">
+            <div class="braille-preview">
+                ⠀⠀⠀⠀⠀⠀⠀⠀⠀<br>
+                ⠀⣀⣤⣴⡾⠿⠟⠛⠋⠉⠉⠉⠉⠉⠉⠉⠙⠛⠻⢿⣦⡀<br>
+                ⠀⣰⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄<br>
+                ⢰⠋⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠘⡆<br>
+                ⠈⣇⠀⠀⠀⠀⠀⢠⡄⠀⠀⠀⠀⠀⠀⢠⡄⠀⠀⠀⠀⠀⢸⡇<br>
+                ⠀⢻⡀⠀⠀⠀⠀⠸⣿⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⣸⠃<br>
+                ⠀⠀⢳⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠀⠀<br>
+                ⠀⠀⠀⠻⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠁⠀⠀<br>
+                ⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠁⠀⠀⠀<br>
+                ⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀⠀⠀⠀⢀⡞⠁⠀⠀⠀⠀⠀<br>
+                ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀⡞⠁⠀⠀⠀⠀⠀⠀⠀<br>
+                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀<br>
+            </div>
+            
+            <h1 class="glitch" data-text="HAR$HIT $IWACH // TERMINAL">
+                HAR$HIT $IWACH // TERMINAL
+            </h1>
+            
+            <div class="ascii-art">
+<pre>
+    __        __   _                            _           
+    \ \      / /__| | ___ ___  _ __ ___   ___  | |_ ___ _ __ 
+     \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \ | __/ _ \ '__|
+      \ V  V /  __/ | (_| (_) | | | | | |  __/ | ||  __/ |   
+       \_/\_/ \___|_|\___\___/|_| |_| |_|\___|  \__\___|_|   
+</pre>
+            </div>
+
+            <p style="font-size: 14px; color: var(--neon-blue); max-width: 600px; margin: 0 auto;">
+                <span style="animation: blink 1s infinite;">⌨️</span> 
+                founder @ <span class="neon-text" style="color: var(--neon-pink);">Rupture Labs</span> 
+                · building <span class="neon-text">web3 degen shit</span> 
+                · coding since '94 (allegedly)
+            </p>
+        </div>
+
+        <!-- TICKER -->
+        <div class="ticker-wrap">
+            <div class="ticker">
+                [ LIVE ] RUPTURE LABS G3ENGINE DEPLOYMENT IN PROGRESS // FINE-TUNING QWEN3 ON PEPYTIDES RN // HEALTHAPP BUILD CRASHING AGAIN // SOLANA TRANSACTION PENDING // WELCOME TO MY CYPHER ZONE // PUSHING CODE AT 3AM // DEGENERATE DEVELOPER ACTIVITY DETECTED //
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+
+            <!-- ABOUT -->
+            <div class="tui-panel cyan-168">
+                <div class="section-title">
+                    [ /ABOUT.EXE ]
+                </div>
+                <div class="tui-content">
+                    <div class="about-box">
+                        <p><strong>yo.</strong> i'm <span class="cypher-text">harshit</span>. this is my <span class="glitch" data-text="CYPHER TERMINAL">CYPHER TERMINAL</span>.</p>
+                        <p>i run <strong style="color: var(--neon-pink);">Rupture Labs</strong> — a web3 gaming studio where we're trying to make blockchain games that don't completely suck (big mood).</p>
+                        <p>i also <span class="cypher-text">fuck around with</span>:</p>
+                        <ul>
+                            <li>🤖 <strong>AI/ML bullshit</strong> — fine-tuning models, running shit locally, RAG bots that answer my dumb questions, peptide chemistry models (lol)</li>
+                            <li>🎮 <strong>Web3 games</strong> — actually built a whole game engine (G3Engine) with Solana + EVM. send help.</li>
+                            <li>📱 <strong>Mobile apps</strong> — iOS (SwiftUI) + Android (Compose). mostly health apps with AI bolted on.</li>
+                            <li>🔗 <strong>Blockchain degeneracy</strong> — smart contracts, pump.fun integrations, NFT minting, token gating. ya know, the usual.</li>
+                        </ul>
+                        <p class="meme-text">"i have no idea what i'm doing but it seems to be working" — every dev ever, including me</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="tui-window white-168 black-text" style="margin-top: 20px;">
+                <div class="tui-panel cyan-168 center">
+                    [ STATS.DAT ]
+                </div>
+                <div class="tui-content">
+                    <table class="tui-table-grid">
+                        <tr>
+                            <td width="50%"><strong style="color: var(--neon-green);">GitHub Repos</strong></td>
+                            <td>99 (i have a problem, send interventions)</td>
+                            <td><strong style="color: var(--neon-purple);">Commit Style</strong></td>
+                            <td>5% coding, 95% "git commit -m 'fix'"</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--neon-blue);">Primary Stack</strong></td>
+                            <td>Python, JS/TS, Swift, Kotlin</td>
+                            <td><strong style="color: var(--neon-orange);">Debug Time</strong></td>
+                            <td>approx. forever</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: var(--neon-pink);">Coffee/Week</strong></td>
+                            <td>∞</td>
+                            <td><strong style="color: var(--neon-green);">Sleep Schedule</strong></td>
+                            <td>"what's that?"</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PROJECTS -->
+            <div class="tui-window green-168 black-255-text" style="margin-top: 20px;">
+                <div class="tui-panel cyan-168 center">
+                    [ PROJECTS.SYS ]
+                </div>
+                <div class="tui-content">
+
+                    <!-- G3Engine -->
+                    <div class="project-card">
+                        <div class="tui-panel white-168 black-text">
+                            <h3>
+                                🎮 <span class="cypher-text decode-effect" data-original="G3Engine">G3Engine</span> 
+                                <span style="font-size: 12px; color: var(--neon-orange);">[SHIPPING]</span>
+                            </h3>
+                            <p><em>Next.js 16 + Three.js + Solana Multi-Chain Game Engine (because existing ones suck)</em></p>
+                            <p>
+                                literally built a full game engine from scratch. has 7 templates (puzzle, arcade, .io, racing, card, strategy, idle),
+                                pump.fun integration, NFT minting, token-gating, 2D visual editor with physics. code is probably trash but it works. ship it.
+                            </p>
+                            <div>
+                                <strong>Stack:</strong>
+                                <span class="stack-badge">Next.js16</span>
+                                <span class="stack-badge">Three.js</span>
+                                <span class="stack-badge">Solana</span>
+                                <span class="stack-badge">Zustand</span>
+                                <span class="stack-badge">Web3</span>
+                            </div>
+                            <p class="meme-text">"one day people will actually use this" — said every indie dev ever, forever</p>
+                        </div>
+                    </div>
+
+                    <!-- RAG Platform -->
+                    <div class="project-card">
+                        <div class="tui-panel white-168 black-text">
+                            <h3>
+                                🤖 <span class="cypher-text decode-effect" data-original="RuptureLabs-RAG">RuptureLabs-RAG</span>
+                                <span style="font-size: 12px; color: var(--neon-blue);">[PRODUCTION]</span>
+                            </h3>
+                            <p><em>FastAPI + Next.js + Ollama — $380/mo @ 600 users (zero pilot costs)</em></p>
+                            <p>
+                                built this because our team kept answering the same questions on Discord. runs on our own servers,
+                                uses only local LLMs (Ollama), has chat UI + admin dashboard. 6-week rollout where i changed
+                                my mind 17 times. production means "i finally stopped coding and just shipped it."
+                            </p>
+                            <div>
+                                <strong>Stack:</strong>
+                                <span class="stack-badge">FastAPI</span>
+                                <span class="stack-badge">Next.js14</span>
+                                <span class="stack-badge">PostgreSQL</span>
+                                <span class="stack-badge">pgvector</span>
+                                <span class="stack-badge">Ollama</span>
+                                <span class="stack-badge">Docker</span>
+                            </div>
+                            <p class="meme-text">"the bot is smarter than some users" — not even sorry</p>
+                        </div>
+                    </div>
+
+                    <!-- Qwen3 Fine-Tuning -->
+                    <div class="project-card">
+                        <div class="tui-panel white-168 black-text">
+                            <h3>
+                                🧬 <span class="cypher-text decode-effect" data-original="qwen3-peptide-ml">qwen3-peptide-ml</span>
+                                <span style="font-size: 12px; color: var(--neon-purple);">[EXPERIMENTAL]</span>
+                            </h3>
+                            <p><em>Fine-tuning Qwen3.5-0.8B-Base on 651 peptide/steroid data points</em></p>
+                            <p>
+                                this one's for biotech/health — fine-tuning a small model on chemical/peptide data.
+                                runs on my MacBook Air M4 (16GB), takes ~15-20 min for 3 epochs using Axolotl.
+                                end goal: fully offline iPhone app via GGUF + llama.cpp (running LLMs on phones = peak degen).
+                            </p>
+                            <div>
+                                <strong>Stack:</strong>
+                                <span class="stack-badge">Axolotl</span>
+                                <span class="stack-badge">LoRA</span>
+                                <span class="stack-badge">PyTorch</span>
+                                <span class="stack-badge">GGUF</span>
+                                <span class="stack-badge">llama.cpp</span>
+                            </div>
+                            <p class="meme-text">"molecular ML on a phone? yeah, i'm that guy now"</p>
+                        </div>
+                    </div>
+
+                    <!-- HealthApp -->
+                    <div class="project-card">
+                        <div class="tui-panel white-168 black-text">
+                            <h3>
+                                📱 <span class="cypher-text decode-effect" data-original="HealthApp">HealthApp</span>
+                                <span style="font-size: 12px; color: var(--neon-orange);">[BUILDING]</span>
+                            </h3>
+                            <p><em>SwiftUI iOS app with multiple local AI backends + graceful degradation</em></p>
+                            <p>
+                                started as a health tracker, then went full degensville and added AI.
+                                now supports Perplexity Sonar Debug + local Gemma4 architecture.
+                                graceful degradation pattern so it works even when shit breaks.
+                                testing on iPhone 17 Pro simulator (lol, not paying for real devices).
+                            </p>
+                            <div>
+                                <strong>Stack:</strong>
+                                <span class="stack-badge">SwiftUI</span>
+                                <span class="stack-badge">iOS</span>
+                                <span class="stack-badge">Kotlin</span>
+                                <span class="stack-badge">Compose</span>
+                            </div>
+                            <p class="meme-text">"health + AI = ???. i'm just here for the vibes"</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- TECH STACK -->
+            <div class="tui-window magenta-168 white-text" style="margin-top: 20px;">
+                <div class="tui-panel cyan-168 center">
+                    [ TOOLBELT.SYS ]
+                </div>
+                <div class="tui-content">
+                    <table class="tui-table-grid">
+                        <tr>
+                            <td width="50%" valign="top">
+                                <span class="neon-text">▸ LANGUAGES</span><br>
+                                ▸ Python (obviously)<br>
+                                ▸ JS/TypeScript<br>
+                                ▸ Swift<br>
+                                ▸ Kotlin<br>
+                                ▸ Solidity (lol)
+                            </td>
+                            <td width="50%" valign="top">
+                                <span class="neon-text">▸ FRAMEWORKS</span><br>
+                                ▸ Next.js / React<br>
+                                ▸ FastAPI<br>
+                                ▸ SwiftUI<br>
+                                ▸ Jetpack Compose<br>
+                                ▸ Three.js (when i'm feeling fancy)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <span class="neon-text">▸ BLOCKCHAIN</span><br>
+                                ▸ Solana<br>
+                                ▸ EVM chains<br>
+                                ▸ Pump.fun<br>
+                                ▸ Token bonding curves<br>
+                                ▸ NFT minting
+                            </td>
+                            <td valign="top">
+                                <span class="neon-text">▸ AI/ML</span><br>
+                                ▸ Fine-tuning (Axolotl)<br>
+                                ▸ Local LLMs (llama.cpp/Ollama)<br>
+                                ▸ RAG / embeddings<br>
+                                ▸ GGUF quantization
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="tui-window blue-168 white-text" style="margin-top: 20px;">
+                <div class="tui-panel cyan-168 center">
+                    [ COMMS.LINK ]
+                </div>
+                <div class="tui-content center">
+                    <p>
+                        <a href="https://github.com/harshitsiwach" class="tui-button white-168 black-text" target="_blank">
+                            ▸ GitHub (duh)
+                        </a>
+                        <a href="https://x.com/harshitsiwach" class="tui-button white-168 black-text" target="_blank">
+                            ▸ X/Twitter (shitposting)
+                        </a>
+                        <a href="mailto:harshitsiwach@gmail.com" class="tui-button white-168 black-text">
+                            ▸ Email (maybe reply)
+                        </a>
+                    </p>
+                    <p class="meme-text" style="margin-top: 15px;">
+                        "hit me up if you got a web3 game idea or some AI bullshit. or just wanna degens together."
+                    </p>
+                </div>
+            </div>
+
+            <!-- LOCKED BLOCK FOR FUN -->
+            <div class="locked-block">
+                <p style="color: var(--neon-orange); font-family: monospace;">
+                    ⚠️  <strong>SYSTEM MSG:</strong> This website is running on <span id="uptime">0</span> hours of sleep and approximately 420% CPU usage.
+                    <br>All errors have been swept under the rug. You're welcome.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="tui-panel black-255-text green-168 center" style="margin-top: 20px; margin-bottom: 80px;">
+            <p>
+                © 2024-2025 HAR$HIT $IWACH — RUPTURE LABS™ (not actually trademarked, lol)<br>
+                Built with <span style="color: red;">♥</span> and approximately 17,394 lines of regret<br>
+                <span class="meme-text">"This site is probably buggy. Deal with it."</span>
+            </p>
+        </div>
+
+    </div>
+
+    <!-- FIXED STATUS BAR -->
+    <div class="footer-bar">
+        <div>
+            <span class="neon-text">CPU:</span> <span style="color: var(--neon-green);">420%</span> | 
+            <span class="neon-text">RAM:</span> <span style="color: var(--neon-pink);">69GB</span> | 
+            <span class="neon-text">NET:</span> <span style="color: var(--neon-blue);">CONNECTED</span>
+        </div>
+        <div class="status-dots">
+            <span style="background: var(--neon-green);"></span>
+            <span style="background: var(--neon-pink);"></span>
+            <span style="background: var(--neon-blue);"></span>
+        </div>
+        <div>
+            <span style="color: var(--neon-green);">Rupture_Labs [ONLINE]</span> | 
+            <span style="color: var(--neon-purple);">G3Engine [BUILDING]</span> | 
+            <span style="color: var(--neon-orange);">HealthApp [CRASHING]</span>
+        </div>
+    </div>
+
+    <!-- BRAILLE DECODE SCRIPT -->
+    <script src="tuicss.min.js"></script>
+    <script>
+        // Braille grid → text decoder (fun effect)
+        const brailleMap = {
+            '⠁': 'a', '⠃': 'b', '⠄': 'd', '⠅': 'e', '⠆': 'g',
+            '⠇': 'h', '⠈': 'i', '⠉': 'c', '⠊': 'j', '⠋': 'f',
+            '⠌': 'k', '⠍': 'l', '⠎': ';', '⠏': 'p', '⠐': ':',
+            '⠑': "'", '⠒': '"', '⠓': 'm', '⠔': 'n', '⠕': 'o',
+            '⠖': 'q', '⠗': 'r', '⠘': 's', '⠙': 't', '⠚': 'u',
+            '⠛': 'v', '⠜': 'w', '⠝': 'x', '⠞': 'y', '⠟': 'z',
+            '⠠': 'A', '⠡': 'B', '⠢': 'D', '⠣': 'E', '⠤': 'G',
+            '⠥': 'H', '⠦': 'I', '⠧': 'C', '⠨': 'J', '⠩': 'K',
+            '⠪': 'L', '⠫': 'M', '⠬': 'N', '⠭': 'O', '⠮': 'P',
+            '⠯': 'Q', '⠰': 'R', '⠱': 'S', '⠲': 'T', '⠳': 'U',
+            '⠴': 'V', '⠵': 'W', '⠶': 'X', '⠷': 'Y', '⠸': 'Z',
+            '⠹': '0', '⠺': '1', '⠻': '2', '⠼': '3', '⠽': '4',
+            '⠾': '5', '⠿': '6', '⡀': '7', '⡁': '8', '⡂': '9'
+        };
+
+        // Glitch effect on hover
+        document.querySelectorAll('.decode-effect').forEach(el => {
+            const original = el.getAttribute('data-original');
+            let iterations = 0;
+            
+            const interval = setInterval(() => {
+                el.innerText = original
+                    .split('')
+                    .map((c, i) => {
+                        if (i < iterations) return original[i];
+                        return String.fromCharCode(33 + Math.floor(Math.random() * 94));
+                    })
+                    .join('');
+                
+                if (iterations >= original.length) clearInterval(interval);
+                iterations += 1/2;
+            }, 30);
+        });
+
+        // Uptime counter (joke)
+        let hours = 0;
+        setInterval(() => { hours++; document.getElementById('uptime').innerText = hours; }, 1000);
+
+        // Console signature
+        console.log('%c/// HAR$HIT $IWACH TERMINAL ///', 'color: #00FF41; font-size: 14px; font-weight: bold;');
+        console.log('%cRupture Labs — building weird shit', 'color: #FF10F0;');
+        console.log('%c> _', 'color: #00FF41;');
+    </script>
+</body>
+</html>
