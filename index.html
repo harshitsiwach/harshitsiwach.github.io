@@ -31,27 +31,6 @@
             padding: 20px;
             overflow-x: hidden;
         }
-
-        /* Braille background pattern */
-        .braille-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                radial-gradient(circle, var(--neon-green) 1px, transparent 1px),
-                radial-gradient(circle, var(--neon-pink) 1px, transparent 1px);
-            background-size: 40px 20px, 60px 30px;
-            background-position: 0 0, 20px 10px;
-            opacity: 0.08;
-            pointer-events: none;
-            z-index: -1;
-            animation: braille-shift 20s linear infinite;
-        }
-
-        @keyframes braille-shift {
-            0% { background-position: 0 0, 20px 10px; }
             100% { background-position: 400px 20px, 440px 30px; }
         }
 
@@ -191,17 +170,6 @@
             text-align: center;
             text-shadow: 0 0 10px var(--neon-green);
             margin: 20px 0;
-        }
-
-        .braille-preview {
-            font-size: 16px;
-            line-height: 1;
-            color: var(--neon-green);
-            opacity: 0.15;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            pointer-events: none;
         }
 
         .ticker-wrap {
@@ -364,16 +332,6 @@
             50% { opacity: 0; }
         }
 
-        .braille-rain {
-            position: fixed;
-            top: -100px;
-            font-size: 14px;
-            color: var(--neon-green);
-            opacity: 0.1;
-            pointer-events: none;
-            z-index: 0;
-            animation: fall linear infinite;
-        }
 
         @keyframes fall {
             to { transform: translateY(calc(100vh + 100px)); }
@@ -469,15 +427,6 @@
 
     <!-- CRT EFFECT -->
     <div class="scanlines"></div>
-    <div class="braille-bg"></div>
-
-    <!-- BRAILLE RAIN -->
-    <div class="braille-rain" style="left: 10%; animation-duration: 8s;">⠁⠃⠄⠅⠆⠇⠈⠉⠊⠋</div>
-    <div class="braille-rain" style="left: 30%; animation-duration: 12s;">⠘⠙⠚⠛⠜⠝⠞⠟</div>
-    <div class="braille-rain" style="left: 50%; animation-duration: 10s;">⠠⠡⠢⠣⠤⠥⠦⠧</div>
-    <div class="braille-rain" style="left: 70%; animation-duration: 15s;">⠨⠩⠪⠫⠬⠭⠮⠯</div>
-    <div class="braille-rain" style="left: 90%; animation-duration: 11s;">⠰⠱⠲⠳⠴⠵⠶⠷</div>
-
     <!-- TOP NAVIGATION -->
     <nav class="top-nav">
         <div class="nav-logo">
@@ -493,7 +442,6 @@
 
         <!-- HEADER -->
         <div class="cyber-header">
-            <div class="braille-preview">
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀<br>
                 ⠀⣀⣤⣴⡾⠿⠟⠛⠋⠉⠉⠉⠉⠉⠉⠉⠙⠛⠻⢿⣦⡀<br>
                 ⠀⣰⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄<br>
@@ -809,11 +757,8 @@
         </div>
     </div>
 
-    <!-- BRAILLE DECODE SCRIPT -->
     <script src="tuicss.min.js"></script>
     <script>
-        // Braille grid → text decoder (fun effect)
-        const brailleMap = {
             '⠁': 'a', '⠃': 'b', '⠄': 'd', '⠅': 'e', '⠆': 'g',
             '⠇': 'h', '⠈': 'i', '⠉': 'c', '⠊': 'j', '⠋': 'f',
             '⠌': 'k', '⠍': 'l', '⠎': ';', '⠏': 'p', '⠐': ':',
@@ -827,7 +772,6 @@
             '⠴': 'V', '⠵': 'W', '⠶': 'X', '⠷': 'Y', '⠸': 'Z',
             '⠹': '0', '⠺': '1', '⠻': '2', '⠼': '3', '⠽': '4',
             '⠾': '5', '⠿': '6', '⡀': '7', '⡁': '8', '⡂': '9'
-        };
 
         // Glitch effect on hover
         document.querySelectorAll('.decode-effect').forEach(el => {
