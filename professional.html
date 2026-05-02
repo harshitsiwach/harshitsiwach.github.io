@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0xUgly — professional profile</title>
+    <script src="tuicss.min.js"></script>
+    <link rel="stylesheet" href="tuicss.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #00FF41;
+            --neon-pink: #FF10F0;
+            --neon-blue: #00D4FF;
+            --neon-purple: #a855f7;
+            --neon-orange: #f97316;
+            --bg-dark: #050505;
+            --tui-bg: #0a0a0a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: var(--bg-dark);
+            color: #e0e0e0;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .braille-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image:
+                radial-gradient(circle, var(--neon-green) 1px, transparent 1px),
+                radial-gradient(circle, var(--neon-pink) 1px, transparent 1px);
+            background-size: 40px 20px, 60px 30px;
+            background-position: 0 0, 20px 10px;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: -1;
+            animation: braille-shift 20s linear infinite;
+        }
+        @keyframes braille-shift {
+            0% { background-position: 0 0, 20px 10px; }
+            100% { background-position: 400px 20px, 440px 30px; }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,0,0,0.1),
+                rgba(0,0,0,0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding-top: 60px;
+        }
+
+        .cyber-header {
+            border: 3px solid var(--neon-green);
+            background: linear-gradient(135deg, rgba(0,255,65,0.1) 0%, rgba(0,212,255,0.1) 100%);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+            animation: scan 3s linear infinite;
+        }
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .ascii-art {
+            font-size: 8px;
+            line-height: 1;
+            white-space: pre;
+            color: var(--neon-green);
+            text-align: center;
+            text-shadow: 0 0 10px var(--neon-green);
+            margin: 10px 0;
+        }
+
+        .ticker-wrap {
+            background: var(--tui-bg);
+            border: 2px solid var(--neon-purple);
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: ticker 25s linear infinite;
+            color: var(--neon-blue);
+            font-weight: bold;
+        }
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .section-title {
+            color: var(--neon-green);
+            border-bottom: 2px solid var(--neon-green);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .content-block {
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: var(--neon-pink);
+            font-weight: bold;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            margin: 3px;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-size: 11px;
+            background: rgba(0,212,255,0.1);
+        }
+
+        .project-block {
+            border: 1px solid #333;
+            padding: 20px;
+            margin: 20px 0;
+            background: rgba(0,255,65,0.03);
+        }
+
+        .project-block:hover {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(0,255,65,0.2);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            font-size: 10px;
+            border-radius: 2px;
+            margin-left: 10px;
+        }
+        .status-active { background: var(--neon-green); color: #000; }
+        .status-building { background: var(--neon-blue); color: #000; }
+        .status-experimental { background: var(--neon-purple); color: #fff; }
+
+        .top-nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(5,5,5,0.98);
+            border-bottom: 2px solid var(--neon-green);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .nav-logo {
+            color: var(--neon-green);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .nav-button {
+            background: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 6px 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 8px;
+        }
+
+        .nav-button:hover {
+            background: var(--neon-green);
+            color: #000;
+        }
+
+        .nav-button.active {
+            background: var(--neon-green);
+            color: #000;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 0 80px;
+            color: #666;
+            font-size: 12px;
+            border-top: 1px solid #333;
+            margin-top: 40px;
+        }
+
+        .contact-link {
+            color: var(--neon-blue);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--neon-blue);
+        }
+        .contact-link:hover {
+            color: var(--neon-green);
+            border-bottom-style: solid;
+        }
+
+        ul { padding-left: 20px; }
+        li { margin: 8px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="scanlines"></div>
+    <div class="braille-bg"></div>
+
+    <!-- TOP NAV -->
+    <nav class="top-nav">
+        <div class="nav-logo">
+            ▸ 0xUgly // PROFESSIONAL
+        </div>
+        <div>
+            <a href="index.html" class="nav-button">◉ DEGEN</a>
+            <a href="professional.html" class="nav-button active">◉ PROFESSIONAL</a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+
+        <!-- HEADER -->
+        <div class="cyber-header">
+            <div class="ascii-art">
+<pre>
+
+    ____  _   _ __  __ ____   ____  _____ ____
+   / ___|| | | |  \/  |  _ \ / ___|| ____|  _ \
+   \___ \| | | | |\/| | |_) | |  _ |  _| | |_) |
+    ___) | |_| | |  | |  _ <| |_| || |___|  _ <
+   |____/ \___/|_|  |_|_| \_\\____||_____|_| \_\
+
+</pre>
+            </div>
+            <h1 style="color: var(--neon-green); font-size: 28px; margin: 10px 0;">
+                0xUgly — Software Engineer & Founder
+            </h1>
+            <p style="color: var(--neon-blue); max-width: 700px; margin: 0 auto;">
+                Full-stack developer specializing in <span class="highlight">Web3 gaming</span>,
+                <span class="highlight">AI/ML systems</span>, and <span class="highlight">mobile applications</span>.
+                Building the future of decentralized entertainment at Rupture Labs.
+            </p>
+        </div>
+
+        <!-- TICKER -->
+        <div class="ticker-wrap">
+            <div class="ticker">
+                Rupture Labs — G3Engine Development • AI Model Fine-Tuning • Production RAG Systems • Mobile AI Integration • Available for consulting • Open-source contributor •
+            </div>
+        </div>
+
+        <!-- ABOUT -->
+        <div class="tui-panel cyan-168">
+            <div class="section-title">
+                [ /ABOUT ]
+            </div>
+            <div class="tui-content">
+                <div class="content-block">
+                    <p>
+                        I'm a software engineer with a focus on building practical, high-performance systems
+                        at the intersection of <span class="highlight">blockchain technology</span> and
+                        <span class="highlight">artificial intelligence</span>. As the founder of
+                        <span class="highlight">Rupture Labs</span>, I lead development of Web3 gaming infrastructure
+                        and AI-powered applications.
+                    </p>
+                    <p>
+                        My work spans full-stack development, machine learning, mobile engineering, and decentralized
+                        systems. I believe in building tools that are powerful, maintainable, and actually useful —
+                        not just hyped.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CORE COMPETENCIES -->
+        <div class="tui-window white-168 black-text" style="margin-top: 20px;">
+            <div class="tui-panel cyan-168 center">
+                [ CORE_COMPETENCIES ]
+            </div>
+            <div class="tui-content">
+                <table class="tui-table-grid">
+                    <tr>
+                        <td width="50%" valign="top">
+                            <strong style="color: var(--neon-green);">▸ Full-Stack Development</strong><br>
+                            &nbsp;&nbsp;• Next.js, React, TypeScript, FastAPI<br>
+                            &nbsp;&nbsp;• PostgreSQL, Redis, REST & GraphQL APIs<br>
+                            &nbsp;&nbsp;• Vercel, Docker, AWS
+                        </td>
+                        <td width="50%" valign="top">
+                            <strong style="color: var(--neon-blue);">▸ AI & Machine Learning</strong><br>
+                            &nbsp;&nbsp;• LLM fine-tuning (LoRA, Axolotl)<br>
+                            &nbsp;&nbsp;• RAG systems & vector databases<br>
+                            &nbsp;&nbsp;• Local LLM deployment (llama.cpp, Ollama)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top">
+                            <strong style="color: var(--neon-purple);">▸ Web3 & Blockchain</strong><br>
+                            &nbsp;&nbsp;• Solana & EVM chain development<br>
+                            &nbsp;&nbsp;• Smart contracts & tokenomics<br>
+                            &nbsp;&nbsp;• NFT minting & on-chain game mechanics
+                        </td>
+                        <td valign="top">
+                            <strong style="color: var(--neon-pink);">▸ Mobile Engineering</strong><br>
+                            &nbsp;&nbsp;• iOS (SwiftUI, Swift)<br>
+                            &nbsp;&nbsp;• Android (Kotlin, Jetpack Compose)<br>
+                            &nbsp;&nbsp;• Cross-platform architecture patterns
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- PROJECTS -->
+        <div class="tui-window green-168 black-255-text" style="margin-top: 20px;">
+            <div class="tui-panel cyan-168 center">
+                [ SELECTED_PROJECTS ]
+            </div>
+            <div class="tui-content">
+
+                <!-- G3Engine -->
+                <div class="project-block">
+                    <h3 style="color: var(--neon-green); margin: 0 0 10px 0;">
+                        🎮 G3Engine — Multi-Chain Web3 Game Engine
+                        <span class="status-badge status-active">ACTIVE</span>
+                    </h3>
+                    <p><em>Next.js 16 • Three.js • Solana • Zustand</em></p>
+                    <p>
+                        A comprehensive game engine designed for Web3 integration. Features include
+                        seven built-in game templates (Puzzle, Arcade, .io, Racing, Card, Strategy, Idle),
+                        Pump.fun bonding curve support, NFT minting capabilities, token-gated progression,
+                        and a 2D visual editor with integrated physics.
+                    </p>
+                    <p style="margin: 10px 0;">
+                        <strong>Key achievements:</strong> Production-ready architecture, modular template system,
+                        on-chain leaderboards, multi-wallet support. Currently powering multiple game prototypes
+                        at Rupture Labs.
+                    </p>
+                </div>
+
+                <!-- RAG Platform -->
+                <div class="project-block">
+                    <h3 style="color: var(--neon-blue); margin: 0 0 10px 0;">
+                        🤖 RuptureLabs RAG — Enterprise Chatbot Platform
+                        <span class="status-badge status-active">PRODUCTION</span>
+                    </h3>
+                    <p><em>FastAPI • Next.js 14 • PostgreSQL • pgvector • Ollama</em></p>
+                    <p>
+                        Developed a production-grade RAG (Retrieval-Augmented Generation) chatbot to handle
+                        internal support and customer inquiries. System processes ~2,000 queries monthly with
+                        sub-second response times while maintaining zero cloud LLM costs.
+                    </p>
+                    <p style="margin: 10px 0;">
+                        <strong>Architecture highlights:</strong> Dockerized microservices, vector similarity search,
+                        admin dashboard with analytics, multi-tenant support. Operating at ~$380/month infrastructure
+                        cost while serving 600+ active users. 6-week rollout with iterative improvements.
+                    </p>
+                </div>
+
+                <!-- ML Fine-Tuning -->
+                <div class="project-block">
+                    <h3 style="color: var(--neon-purple); margin: 0 0 10px 0;">
+                        🧬 Peptide/Protein ML Fine-Tuning Pipeline
+                        <span class="status-badge status-experimental">RESEARCH</span>
+                    </h3>
+                    <p><em>Qwen3.5-0.8B • Axolotl • LoRA • GGUF</em></p>
+                    <p>
+                        Built an end-to-end pipeline for fine-tuning language models on biochemical data
+                        (peptides and steroid compounds). Successfully trained on 651 curated examples using
+                        parameter-efficient LoRA adaptation, achieving convergence in ~15 minutes on consumer
+                        hardware (MacBook Air M4, 16GB RAM).
+                    </p>
+                    <p style="margin: 10px 0;">
+                        <strong>Goal:</strong> Deploy as a fully offline mobile application using GGUF quantization
+                        and llama.cpp, enabling on-device molecular property prediction without internet connectivity.
+                        Project demonstrates expertise in domain-specific model adaptation and edge deployment.
+                    </p>
+                </div>
+
+                <!-- HealthApp -->
+                <div class="project-block">
+                    <h3 style="color: var(--neon-pink); margin: 0 0 10px 0;">
+                        📱 HealthApp — AI-Powered Health Assistant
+                        <span class="status-badge status-building">IN DEVELOPMENT</span>
+                    </h3>
+                    <p><em>SwiftUI • iOS • Kotlin • Jetpack Compose</em></p>
+                    <p>
+                        Native mobile application built with SwiftUI and Jetpack Compose, integrating multiple
+                        AI backends for health data analysis and personalized recommendations. Implements a
+                        graceful degradation pattern to maintain functionality across varying network conditions
+                        and AI service availability.
+                    </p>
+                    <p style="margin: 10px 0;">
+                        <strong>Technical focus:</strong> Local-first architecture, multi-provider AI fallback chains,
+                        privacy-preserving data handling, cross-platform code sharing strategies.
+                        Currently in active development with stable iOS simulator builds.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TECH STACK -->
+        <div class="tui-window magenta-168 white-text" style="margin-top: 20px;">
+            <div class="tui-panel cyan-168 center">
+                [ TECHNOLOGY_STACK ]
+            </div>
+            <div class="tui-content">
+                <p style="margin-bottom: 15px;">
+                    <strong style="color: var(--neon-green);">Languages:</strong>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">TypeScript</span>
+                    <span class="tech-tag">JavaScript</span>
+                    <span class="tech-tag">Swift</span>
+                    <span class="tech-tag">Kotlin</span>
+                    <span class="tech-tag">Solidity</span>
+                    <span class="tech-tag">Bash</span>
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <strong style="color: var(--neon-blue);">Frameworks & Libraries:</strong>
+                    <span class="tech-tag">Next.js</span>
+                    <span class="tech-tag">React</span>
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">SwiftUI</span>
+                    <span class="tech-tag">Jetpack Compose</span>
+                    <span class="tech-tag">Three.js</span>
+                    <span class="tech-tag">Zustand</span>
+                </p>
+                <p style="margin-bottom: 15px;">
+                    <strong style="color: var(--neon-purple);">Data & Infrastructure:</strong>
+                    <span class="tech-tag">PostgreSQL</span>
+                    <span class="tech-tag">Redis</span>
+                    <span class="tech-tag">Docker</span>
+                    <span class="tech-tag">GitHub Actions</span>
+                    <span class="tech-tag">Vercel</span>
+                    <span class="tech-tag">AWS</span>
+                </p>
+                <p>
+                    <strong style="color: var(--neon-pink);">Specializations:</strong>
+                    <span class="tech-tag">Web3 / Solana</span>
+                    <span class="tech-tag">LLM Fine-Tuning</span>
+                    <span class="tech-tag">RAG Systems</span>
+                    <span class="tech-tag">Mobile AI</span>
+                    <span class="tech-tag">Game Development</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- EDUCATION & EXPERIENCE -->
+        <div class="tui-window yellow-168 black-text" style="margin-top: 20px;">
+            <div class="tui-panel cyan-168 center">
+                [ BACKGROUND ]
+            </div>
+            <div class="tui-content">
+                <p><strong>Founder & Lead Developer</strong> — Rupture Labs (2023 – Present)</p>
+                <p style="margin-left: 20px;">
+                    Building Web3 gaming infrastructure and AI-powered applications. Leading architecture
+                    decisions, codebase development, and technical direction for all Rupture Labs projects.
+                </p>
+
+                <p><strong>Software Engineer</strong> — Full-Stack Development (2019 – 2023)</p>
+                <p style="margin-left: 20px;">
+                    Developed and maintained production applications for various clients and startups.
+                    Specialized in React/Next.js ecosystems and Python backends.
+                </p>
+
+                <p><strong>Areas of Focus</strong></p>
+                <ul>
+                    <li>Distributed systems and decentralized applications</li>
+                    <li>Large language model adaptation and deployment</li>
+                    <li>Mobile application architecture</li>
+                    <li>Real-time multiplayer game systems</li>
+                    <li>Performance optimization and scalability</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="tui-window blue-168 white-text" style="margin-top: 20px;">
+            <div class="tui-panel cyan-168 center">
+                [ CONTACT ]
+            </div>
+            <div class="tui-content center">
+                <p style="font-size: 15px; margin: 20px 0;">
+                    Open to consulting, collaboration, and interesting projects.
+                </p>
+                <p>
+                    <a href="https://github.com/0xUgly" class="tui-button white-168 black-text" target="_blank">
+                        ▸ GitHub Profile
+                    </a>
+                    <a href="https://x.com/0xUgly" class="tui-button white-168 black-text" target="_blank">
+                        ▸ X / Twitter
+                    </a>
+                    <a href="mailto:harshitsiwach@gmail.com" class="tui-button white-168 black-text">
+                        ▸ Email
+                    </a>
+                </p>
+                <p style="margin-top: 20px; color: var(--neon-blue); font-size: 13px;">
+                    Based remotely • Available for remote collaboration • English fluent
+                </p>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>
+                0xUgly • Rupture Labs • © 2024–2025<br>
+                <span style="color: var(--neon-green);">Built with precision and purpose</span>
+            </p>
+        </div>
+
+    </div>
+
+    <script src="tuicss.min.js"></script>
+    <script>
+        // Console signature
+        console.log('%c/// 0xUgly — PROFESSIONAL TERMINAL ///', 'color: #00FF41; font-size: 14px; font-weight: bold;');
+        console.log('%cRupture Labs — engineering the future', 'color: #00D4FF;');
+    </script>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>harshitsiwach — cypher terminal</title>
+    <title>0xUgly — cypher terminal</title>
     <script src="tuicss.min.js"></script>
     <link rel="stylesheet" href="tuicss.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +39,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
+            background-image:
                 radial-gradient(circle, var(--neon-green) 1px, transparent 1px),
                 radial-gradient(circle, var(--neon-pink) 1px, transparent 1px);
             background-size: 40px 20px, 60px 30px;
@@ -408,6 +408,61 @@
         .locked-block::before {
             content: '⚠️ ';
         }
+
+        /* TOP NAVIGATION */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(5, 5, 5, 0.95);
+            border-bottom: 2px solid var(--neon-green);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-logo {
+            color: var(--neon-green);
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .nav-button {
+            background: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 8px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-button:hover {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        .nav-button.active {
+            background: var(--neon-green);
+            color: #000;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding-top: 60px; /* space for fixed nav */
+        }
     </style>
 </head>
 <body>
@@ -422,6 +477,17 @@
     <div class="braille-rain" style="left: 50%; animation-duration: 10s;">⠠⠡⠢⠣⠤⠥⠦⠧</div>
     <div class="braille-rain" style="left: 70%; animation-duration: 15s;">⠨⠩⠪⠫⠬⠭⠮⠯</div>
     <div class="braille-rain" style="left: 90%; animation-duration: 11s;">⠰⠱⠲⠳⠴⠵⠶⠷</div>
+
+    <!-- TOP NAVIGATION -->
+    <nav class="top-nav">
+        <div class="nav-logo">
+            ▸ 0xUglY // TERMINAL
+        </div>
+        <div>
+            <a href="index.html" class="nav-button active">◉ DEGEN</a>
+            <a href="professional.html" class="nav-button">◉ PROFESSIONAL</a>
+        </div>
+    </nav>
 
     <div class="main-container">
 
@@ -441,11 +507,11 @@
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⣄⠀⠀⡞⠁⠀⠀⠀⠀⠀⠀⠀<br>
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀<br>
             </div>
-            
-            <h1 class="glitch" data-text="HAR$HIT $IWACH // TERMINAL">
-                HAR$HIT $IWACH // TERMINAL
+
+            <h1 class="glitch" data-text="0xUgly // TERMINAL">
+                0xUgly // TERMINAL
             </h1>
-            
+
             <div class="ascii-art">
 <pre>
     __        __   _                            _           
@@ -457,9 +523,9 @@
             </div>
 
             <p style="font-size: 14px; color: var(--neon-blue); max-width: 600px; margin: 0 auto;">
-                <span style="animation: blink 1s infinite;">⌨️</span> 
-                founder @ <span class="neon-text" style="color: var(--neon-pink);">Rupture Labs</span> 
-                · building <span class="neon-text">web3 degen shit</span> 
+                <span style="animation: blink 1s infinite;">⌨️</span>
+                founder @ <span class="neon-text" style="color: var(--neon-pink);">Rupture Labs</span>
+                · building <span class="neon-text">web3 degen shit</span>
                 · coding since '94 (allegedly)
             </p>
         </div>
@@ -481,7 +547,7 @@
                 </div>
                 <div class="tui-content">
                     <div class="about-box">
-                        <p><strong>yo.</strong> i'm <span class="cypher-text">harshit</span>. this is my <span class="glitch" data-text="CYPHER TERMINAL">CYPHER TERMINAL</span>.</p>
+                        <p><strong>yo.</strong> i'm <span class="cypher-text">0xUgly</span>. this is my <span class="glitch" data-text="CYPHER TERMINAL">CYPHER TERMINAL</span>.</p>
                         <p>i run <strong style="color: var(--neon-pink);">Rupture Labs</strong> — a web3 gaming studio where we're trying to make blockchain games that don't completely suck (big mood).</p>
                         <p>i also <span class="cypher-text">fuck around with</span>:</p>
                         <ul>
@@ -535,7 +601,7 @@
                     <div class="project-card">
                         <div class="tui-panel white-168 black-text">
                             <h3>
-                                🎮 <span class="cypher-text decode-effect" data-original="G3Engine">G3Engine</span> 
+                                🎮 <span class="cypher-text decode-effect" data-original="G3Engine">G3Engine</span>
                                 <span style="font-size: 12px; color: var(--neon-orange);">[SHIPPING]</span>
                             </h3>
                             <p><em>Next.js 16 + Three.js + Solana Multi-Chain Game Engine (because existing ones suck)</em></p>
@@ -687,14 +753,14 @@
                 </div>
                 <div class="tui-content center">
                     <p>
-                        <a href="https://github.com/harshitsiwach" class="tui-button white-168 black-text" target="_blank">
-                            ▸ GitHub (duh)
+                        <a href="https://github.com/0xUgly" class="tui-button white-168 black-text" target="_blank">
+                            ▸ GitHub
                         </a>
-                        <a href="https://x.com/harshitsiwach" class="tui-button white-168 black-text" target="_blank">
-                            ▸ X/Twitter (shitposting)
+                        <a href="https://x.com/0xUgly" class="tui-button white-168 black-text" target="_blank">
+                            ▸ X / Twitter
                         </a>
                         <a href="mailto:harshitsiwach@gmail.com" class="tui-button white-168 black-text">
-                            ▸ Email (maybe reply)
+                            ▸ Email
                         </a>
                     </p>
                     <p class="meme-text" style="margin-top: 15px;">
@@ -716,7 +782,7 @@
         <!-- FOOTER -->
         <div class="tui-panel black-255-text green-168 center" style="margin-top: 20px; margin-bottom: 80px;">
             <p>
-                © 2024-2025 HAR$HIT $IWACH — RUPTURE LABS™ (not actually trademarked, lol)<br>
+                © 2024-2025 0xUgly — RUPTURE LABS™ (not actually trademarked, lol)<br>
                 Built with <span style="color: red;">♥</span> and approximately 17,394 lines of regret<br>
                 <span class="meme-text">"This site is probably buggy. Deal with it."</span>
             </p>
@@ -727,8 +793,8 @@
     <!-- FIXED STATUS BAR -->
     <div class="footer-bar">
         <div>
-            <span class="neon-text">CPU:</span> <span style="color: var(--neon-green);">420%</span> | 
-            <span class="neon-text">RAM:</span> <span style="color: var(--neon-pink);">69GB</span> | 
+            <span class="neon-text">CPU:</span> <span style="color: var(--neon-green);">420%</span> |
+            <span class="neon-text">RAM:</span> <span style="color: var(--neon-pink);">69GB</span> |
             <span class="neon-text">NET:</span> <span style="color: var(--neon-blue);">CONNECTED</span>
         </div>
         <div class="status-dots">
@@ -737,8 +803,8 @@
             <span style="background: var(--neon-blue);"></span>
         </div>
         <div>
-            <span style="color: var(--neon-green);">Rupture_Labs [ONLINE]</span> | 
-            <span style="color: var(--neon-purple);">G3Engine [BUILDING]</span> | 
+            <span style="color: var(--neon-green);">Rupture_Labs [ONLINE]</span> |
+            <span style="color: var(--neon-purple);">G3Engine [BUILDING]</span> |
             <span style="color: var(--neon-orange);">HealthApp [CRASHING]</span>
         </div>
     </div>
@@ -767,7 +833,7 @@
         document.querySelectorAll('.decode-effect').forEach(el => {
             const original = el.getAttribute('data-original');
             let iterations = 0;
-            
+
             const interval = setInterval(() => {
                 el.innerText = original
                     .split('')
@@ -776,7 +842,7 @@
                         return String.fromCharCode(33 + Math.floor(Math.random() * 94));
                     })
                     .join('');
-                
+
                 if (iterations >= original.length) clearInterval(interval);
                 iterations += 1/2;
             }, 30);
@@ -787,7 +853,7 @@
         setInterval(() => { hours++; document.getElementById('uptime').innerText = hours; }, 1000);
 
         // Console signature
-        console.log('%c/// HAR$HIT $IWACH TERMINAL ///', 'color: #00FF41; font-size: 14px; font-weight: bold;');
+        console.log('%c/// 0xUgly TERMINAL ///', 'color: #00FF41; font-size: 14px; font-weight: bold;');
         console.log('%cRupture Labs — building weird shit', 'color: #FF10F0;');
         console.log('%c> _', 'color: #00FF41;');
     </script>
